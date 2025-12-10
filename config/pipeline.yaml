@@ -10,7 +10,7 @@
 openai:
   # ✅ OpenAI API Key, supports injection via OPENAI_API_KEY environment variable
   # ⚠️ WARNING: API key is hardcoded here. For production, use environment variable instead!
-  api_key: "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"
+  api_key: "${API_KEY}"
 
   # ✅ If using Azure/OpenAI compatible service, specify `base_url`; leave empty for default official address
   base_url: "${BASE_URL}"
@@ -130,4 +130,5 @@ runtime:
 
   # ✅ Limit paper count processed per topic; null means use fetch.max_papers_per_topic
   paper_limit: null
+
 
