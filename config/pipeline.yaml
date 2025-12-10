@@ -16,10 +16,10 @@ openai:
   base_url: "${BASE_URL}"
 
   # ✅ Model for relevance scoring (recommended to use lightweight model, e.g. gpt-4o-mini)
-  relevance_model: "gpt-4o-mini"
+  relevance_model: "gpt-5-mini"
 
   # ✅ Model for TODO planning and item-by-item Q&A (can be same as above or use stronger model)
-  summarization_model: "gpt-4o"
+  summarization_model: "gpt-5-mini"
 
   # ✅ Global temperature, controls generation randomness (0~1, lower = more stable)
   temperature: 0.2
@@ -39,31 +39,33 @@ fetch:
 
 topics:
   # ✅ Each Topic represents a focus area, can be added/removed anytime
-  - name: "Software Testing"            # Unique identifier (for filenames/directories)
-    label: "Software Testing"                   # User-visible label (can be Chinese for prompts)
+  - name: "Multi-Robot"            # Unique identifier (for filenames/directories)
+    label: "Multi-Robot"                   # User-visible label (can be Chinese for prompts)
 
     query:
       # ✅ arXiv category filter, fill in official subject code
-      categories: ["cs.SE", "cs.AI"]
+      categories: ["cs.SE", "cs.AI", "cs.RO", "cs.LG", "cs.SY"]
 
       # ✅ Keywords expected in title/abstract, supports phrases
-      include: ["software testing", "test generation", "test update"]
+      include: ["multi-robot", "multi-agent", "multi robot", "multi agent",
+        "LLM", "large language model", "language model", "data-driven", "learning-based", "reinforcement learning",
+        "neural network", "deep learning", "end-to-end learning",
+        "open source", "open-source", "code available", "github"]
 
       # ✅ Keywords to exclude, prevent noise
       exclude: ["quantum", "biomedical"]
 
     # ✅ User's interest description for this field, passed to LLM for reference
     interest_prompt: |
-      I am interested in test case generation and test update. I want to understand how LLMs and Static Analysis can be effectively combined to improve software testing efficiency and effectiveness.
-
-  - name: "Code Agent"
-    label: "Code Agent"
-    query:
-      categories: ["cs.AI", "cs.SE"]
-      include: ["software development", "program analysis"]
-      exclude: []
-    interest_prompt: |
-      I am interested in how code agents can assist in software development and program analysis. I want to explore the capabilities and limitations of current code agents in real-world software engineering tasks.
+      我关注基于大语言模型（LLM）驱动和数据驱动的多机器人控制方法。
+      我对以下方向感兴趣：
+      1. 使用大语言模型进行多机器人任务规划、协调和决策
+      2. 基于数据驱动和深度学习的多机器人控制方法（如强化学习、模仿学习）
+      3. 端到端学习的多机器人系统
+      4. 开源的多机器人控制框架和代码实现
+      
+      我不关注传统的基于优化的控制方法（如MPC、LQR等），更关注学习型和LLM驱动的新方法。
+      优先选择提供开源代码或GitHub链接的论文。
 
 relevance:
   # ✅ Dimension definitions for paper relevance, can add/remove/adjust weights based on interests
@@ -96,7 +98,7 @@ site:
   output_dir: "site"
 
   # ✅ External access base URL, update to actual address after GitHub Pages publishing
-  base_url: "https://yeren66.github.io/LLM4ArxivPaper"
+  base_url: "https://2-chen.github.io/llm4arxivpaper.io"
 
 email:
   # ✅ Whether to enable email push (false = disabled)
@@ -111,8 +113,8 @@ email:
   # ✅ SMTP server settings (recommend injecting sensitive info via environment variables)
   smtp_host: "smtp.gmail.com"
   smtp_port: 465
-  username: "${MAIL_USERNAME}"
-  password: "${MAIL_PASSWORD}"  # Recommend exporting environment variable before running
+  username: "1441739845@qq.com"
+  password: "chen2329"  # Recommend exporting environment variable before running
   use_tls: false
   use_ssl: true
   timeout: 30
@@ -128,3 +130,4 @@ runtime:
 
   # ✅ Limit paper count processed per topic; null means use fetch.max_papers_per_topic
   paper_limit: null
+
