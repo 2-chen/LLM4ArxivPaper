@@ -1,0 +1,130 @@
+# =============================
+# LLM4ArxivPaper Main Configuration Template
+#
+# Notes:
+# 1. All fields can be adjusted as needed; delete unused array configurations if not required.
+# 2. If a field supports reading from environment variables, ${VAR_NAME} format is used in examples.
+# 3. This template aims to help quickly understand meanings; please streamline as needed before actual run.
+# =============================
+
+openai:
+  # ✅ OpenAI API Key, supports injection via OPENAI_API_KEY environment variable
+  # ⚠️ WARNING: API key is hardcoded here. For production, use environment variable instead!
+  api_key: "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"
+
+  # ✅ If using Azure/OpenAI compatible service, specify `base_url`; leave empty for default official address
+  base_url: "${BASE_URL}"
+
+  # ✅ Model for relevance scoring (recommended to use lightweight model, e.g. gpt-4o-mini)
+  relevance_model: "gpt-4o-mini"
+
+  # ✅ Model for TODO planning and item-by-item Q&A (can be same as above or use stronger model)
+  summarization_model: "gpt-4o"
+
+  # ✅ Global temperature, controls generation randomness (0~1, lower = more stable)
+  temperature: 0.2
+
+  # ✅ Output language: 'zh-CN' (Simplified Chinese) or 'en' (English)
+  language: "zh-CN"
+
+fetch:
+  # ✅ Max papers to fetch per Topic, used to control costs
+  max_papers_per_topic: 50
+
+  # ✅ Query lookback days: e.g., 7 means fetch papers published within last 7 days
+  days_back: 7
+
+  # ✅ arXiv API request interval (seconds), avoid rate limiting
+  request_delay: 3.0
+
+topics:
+  # ✅ Each Topic represents a focus area, can be added/removed anytime
+  - name: "Software Testing"            # Unique identifier (for filenames/directories)
+    label: "Software Testing"                   # User-visible label (can be Chinese for prompts)
+
+    query:
+      # ✅ arXiv category filter, fill in official subject code
+      categories: ["cs.SE", "cs.AI"]
+
+      # ✅ Keywords expected in title/abstract, supports phrases
+      include: ["software testing", "test generation", "test update"]
+
+      # ✅ Keywords to exclude, prevent noise
+      exclude: ["quantum", "biomedical"]
+
+    # ✅ User's interest description for this field, passed to LLM for reference
+    interest_prompt: |
+      I am interested in test case generation and test update. I want to understand how LLMs and Static Analysis can be effectively combined to improve software testing efficiency and effectiveness.
+
+  - name: "Code Agent"
+    label: "Code Agent"
+    query:
+      categories: ["cs.AI", "cs.SE"]
+      include: ["software development", "program analysis"]
+      exclude: []
+    interest_prompt: |
+      I am interested in how code agents can assist in software development and program analysis. I want to explore the capabilities and limitations of current code agents in real-world software engineering tasks.
+
+relevance:
+  # ✅ Dimension definitions for paper relevance, can add/remove/adjust weights based on interests
+  scoring_dimensions:
+    - name: "topic_alignment"       # Topic fit
+      weight: 0.35
+      description: "Whether paper research direction aligns with my focus areas"
+    - name: "methodology_fit"       # Methodology match
+      weight: 0.25
+      description: "Whether proposed methods are directly relevant to my concerns"
+    - name: "novelty"               # Innovation
+      weight: 0.2
+      description: "Whether paper provides novel contributions or perspectives"
+    - name: "experiment_coverage"   # Experiment completeness
+      weight: 0.2
+      description: "Whether experiment/evaluation setup sufficiently answers key questions"
+
+  # ✅ Pass threshold: total score >= this value considered "relevant", ultimately retained
+  pass_threshold: 60
+
+summarization:
+  # ✅ Target number of TODO list items, actual generated count may vary slightly
+  task_list_size: 5
+
+  # ✅ Max key sections displayed in each summary, prevent overly long output
+  max_sections: 4
+
+site:
+  # ✅ Static site output directory, recommend adding to .gitignore
+  output_dir: "site"
+
+  # ✅ External access base URL, update to actual address after GitHub Pages publishing
+  base_url: "https://yeren66.github.io/LLM4ArxivPaper"
+
+email:
+  # ✅ Whether to enable email push (false = disabled)
+  enabled: true
+
+  # ✅ Sender email (must support SMTP), recommend using app-specific password
+  sender: "${MAIL_USERNAME}"
+
+  # ✅ Recipient list
+  recipients: ["syeren@foxmail.com"]
+
+  # ✅ SMTP server settings (recommend injecting sensitive info via environment variables)
+  smtp_host: "smtp.gmail.com"
+  smtp_port: 465
+  username: "${MAIL_USERNAME}"
+  password: "${MAIL_PASSWORD}"  # Recommend exporting environment variable before running
+  use_tls: false
+  use_ssl: true
+  timeout: 30
+
+  # ✅ Email subject template, can use {run_date}, {paper_count} placeholders
+  subject_template: "📑 Weekly Paper Reading - {run_date}"
+
+runtime:
+  # ✅ Run mode:
+  #    - online  : Call OpenAI API for real scoring & summarization (requires API Key)
+  #    - offline : Use heuristic rules, suitable for local debugging or no-network scenarios
+  mode: "online"
+
+  # ✅ Limit paper count processed per topic; null means use fetch.max_papers_per_topic
+  paper_limit: null
