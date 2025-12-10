@@ -113,8 +113,8 @@ email:
   # ✅ SMTP server settings (recommend injecting sensitive info via environment variables)
   smtp_host: "smtp.gmail.com"
   smtp_port: 465
-  username: "1441739845@qq.com"
-  password: "chen2329"  # Recommend exporting environment variable before running
+  username: "${MAIL_USERNAME}"
+  password: "${MAIL_PASSWORD}"  # Recommend exporting environment variable before running
   use_tls: false
   use_ssl: true
   timeout: 30
@@ -130,5 +130,6 @@ runtime:
 
   # ✅ Limit paper count processed per topic; null means use fetch.max_papers_per_topic
   paper_limit: null
+
 
 
